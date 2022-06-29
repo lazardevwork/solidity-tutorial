@@ -1,11 +1,10 @@
-import { create as ipfsClientCreate } from 'ipfs-http-client'
-
 import HelloWorld from '../../abis/HelloWorld.json'
 
 let networkAccount = null
 let contract = null
 
 const mint_btn = document.getElementById('mint_btn')
+const mint_label = document.getElementById('mint_result')
 
 
 const loadBlockchainData = async (web3Info) => {
@@ -20,6 +19,8 @@ const loadBlockchainData = async (web3Info) => {
         const abi = HelloWorld.abi
         const address = networkData.address
         contract = new web3Info.eth.Contract(abi, address)
+        const result = await contract.methods.getHello().call()
+        mint_label.innerText = result
         return
       }
     }
@@ -28,9 +29,9 @@ const loadBlockchainData = async (web3Info) => {
 
 }
 async function sayHello(name) {
-  return new Promise((res) => {
+  return new Promise((resolve) => {
     contract.methods.sayHello(name).send({ from: networkAccount }, function (receipt) {
-      res(receipt)
+      resolve(receipt)
     })
   })
 }
@@ -40,10 +41,8 @@ mint_btn.addEventListener('click', async () => {
 
     const name = document.getElementById('mint_name').value
     if (name) {
-      const nameRes = await sayHello(name)
-      console.log(nameRes)
-      const result = await contract.methods.getHello().call()
-      console.log(result)
+      await sayHello(name)
+      loadBlockchainData()
     } else {
       alert('name is null')
     }
