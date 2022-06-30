@@ -2,7 +2,7 @@ import AssetTransfer from '../../abis/AssetTransfer.json'
 
 let networkAccount = null
 let contract = null
-
+let web3Info = null
 const send_btn = document.getElementById('send')
 const amount_init = document.getElementById('amount_init')
 const payer_amount = document.getElementById('payer_amount')
@@ -37,11 +37,13 @@ const loadBlockchainData = async (web3Info) => {
 send_btn.addEventListener('click', async () => {
   try {
 
-    const amount = document.getElementById('amount_send').value
+    let amount = document.getElementById('amount_send').value
+    console.log(amount)
     if (amount) {
+      amount = parseInt(amount)
       contract.methods.send(amount).send({ from: networkAccount }, function (receipt) {
         console.log(receipt)
-        loadBlockchainData()
+        loadBlockchainData(web3Info)
       }).catch((error) => {
         console.log(error)
       })
@@ -68,7 +70,7 @@ window.onload = async function () {
     return null
   }
 
-
+  web3Info = web3
   await loadBlockchainData(web3)
   const amount = amount_init.value
   contract.methods.init(amount).send({ from: networkAccount }, function (receipt) {
