@@ -1,29 +1,12 @@
 ## Requirements
 
-• Develop a dapp that takes a name in input and runs a smart contract with the provided name.
+• Develop a dapp that performs a payment between two parties.  
+• The application should allow to initialize the amount owned by one party, and check for sufficient funds before the transfer.  
+• The amount to pay should be agreed between the two parties.
 
 ## Functionality
 
-• Smart Contract similar to the code sample below to produce “Hello name” passed to the sayHello() function.
-
-```
-contract HelloWorld {
-   string public message;
-   constructor() {
-      message = “Hello”;
-   }
-
-   function sayHello(string memory name) public {
-      message = concatenate(message, name);
-   }
-
-  function concatenate(string memory a, string memory b) public pure returns (string memory) {
-        return string(bytes.concat(bytes(a), " ", bytes(b)));
-    }
-}
-```
-
-• Frontend with  
- o Text field for entering the name.  
- o Button to invoke the contract passing the name.  
- o Label to display the result.
+• UI for setting up the initial amount owned by the paying party.  
+• UI for defining the amount of payment by the payee (receiving party).  
+• Button to perform the payment.  
+• Label to show any validation error.

@@ -1,10 +1,12 @@
-import HelloWorld from '../../abis/HelloWorld.json'
+import AssetTransfer from '../../abis/AssetTransfer.json'
 
 let networkAccount = null
 let contract = null
 
-const mint_btn = document.getElementById('mint_btn')
-const mint_label = document.getElementById('mint_result')
+const send_btn = document.getElementById('send')
+const amount_init = document.getElementById('amount_init')
+const payer_amount = document.getElementById('payer_amount')
+const payee_amount = document.getElementById('payee_amount')
 
 
 const loadBlockchainData = async (web3Info) => {
@@ -14,13 +16,15 @@ const loadBlockchainData = async (web3Info) => {
 
       networkAccount = accounts[0]
       const networkId = await web3Info.eth.net.getId()
-      const networkData = HelloWorld.networks[networkId]
+      const networkData = AssetTransfer.networks[networkId]
       if (networkData) {
-        const abi = HelloWorld.abi
+        const abi = AssetTransfer.abi
         const address = networkData.address
         contract = new web3Info.eth.Contract(abi, address)
-        const result = await contract.methods.getHello().call()
-        mint_label.innerText = result
+        const payeeAmount = await contract.methods.getPayeeAmount().call()
+        const payerAmount = await contract.methods.getPayerAmount().call()
+        payer_amount.innerText = payerAmount
+        payee_amount.innerText = payeeAmount
         return
       }
     }
@@ -28,21 +32,19 @@ const loadBlockchainData = async (web3Info) => {
   alert('web3Info is not valid')
 
 }
-async function sayHello(name) {
-  return new Promise((resolve) => {
-    contract.methods.sayHello(name).send({ from: networkAccount }, function (receipt) {
-      resolve(receipt)
-    })
-  })
-}
 
-mint_btn.addEventListener('click', async () => {
+
+send_btn.addEventListener('click', async () => {
   try {
 
-    const name = document.getElementById('mint_name').value
-    if (name) {
-      await sayHello(name)
-      loadBlockchainData()
+    const amount = document.getElementById('amount_send').value
+    if (amount) {
+      contract.methods.send(amount).send({ from: networkAccount }, function (receipt) {
+        console.log(receipt)
+        loadBlockchainData()
+      }).catch((error) => {
+        console.log(error)
+      })
     } else {
       alert('name is null')
     }
@@ -51,8 +53,8 @@ mint_btn.addEventListener('click', async () => {
   }
 })
 
+
 window.onload = async function () {
-  mint_btn.disabled = true
   let web3 = null
   if (window.ethereum) {
     web3 = new Web3(window.ethereum)
@@ -65,10 +67,12 @@ window.onload = async function () {
     window.alert('Please use metamask')
     return null
   }
+
+
   await loadBlockchainData(web3)
-  mint_btn.disabled = false
+  const amount = amount_init.value
+  contract.methods.init(amount).send({ from: networkAccount }, function (receipt) {
+    loadBlockchainData(web3)
+  })
 }
-
-
-
 
