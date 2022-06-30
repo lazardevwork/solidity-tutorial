@@ -1,4 +1,4 @@
-import AssetTransfer from '../../abis/AssetTransfer.json'
+import DigitalBallot from '../../abis/DigitalBallot.json'
 
 let networkAccount = null
 let contract = null
@@ -16,9 +16,9 @@ const loadBlockchainData = async (web3Info) => {
 
       networkAccount = accounts[0]
       const networkId = await web3Info.eth.net.getId()
-      const networkData = AssetTransfer.networks[networkId]
+      const networkData = DigitalBallot.networks[networkId]
       if (networkData) {
-        const abi = AssetTransfer.abi
+        const abi = DigitalBallot.abi
         const address = networkData.address
         contract = new web3Info.eth.Contract(abi, address)
         const payeeAmount = await contract.methods.getPayeeAmount().call()

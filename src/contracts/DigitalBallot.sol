@@ -1,29 +1,51 @@
 pragma solidity >=0.4.21 <0.6.0;
 
-contract AssetTransfer {
-    // uint256
-    uint256 payerAmount;
-    uint256 payeeAmount;
+contract DigitalBallot {
+    uint256 startTime;
+    uint256 endTime;
+    mapping(address => bool) parties;
+    mapping(address => bool) voted;
+    mapping(address => bool) flags;
+    address[] authorizedParties;
 
-    function init(uint256 amount) public {
-        payerAmount = amount;
+    event BallotOpened(uint256 startTime, uint256 endTime);
+
+    address owner;
+
+    constructor() public {
+        owner = msg.sender;
     }
 
-    function send(uint256 amount) public {
-        require(payerAmount >= amount, "Payer amount underflow amount");
-        require(
-            payeeAmount + amount >= payeeAmount,
-            "Payee amount overflow amount"
-        );
-        payerAmount -= amount;
-        payeeAmount += amount;
+    modifier OnlyOwner() {
+        require(owner == msg.sender, "You are not owner");
+        _;
     }
 
-    function getPayeeAmount() public view returns (uint256) {
-        return payeeAmount;
+    function openBallot(uint256 _start, uint256 _end) public OnlyOwner {
+        startTime = _start;
+        endTime = _end;
+
+        emit BallotOpened(startTime, endTime);
     }
 
-    function getPayerAmount() public view returns (uint256) {
-        return payerAmount;
+    function addParty(address _party) public OnlyOwner {
+        parties[_party] = true;
+        authorizedParties.push(_party);
+    }
+
+    function vote(bool flag) public {
+        address voter = msg.sender;
+        require(block.timestamp >= startTime && block.timestamp <= endTime, "");
+        require(parties[voter], "not authorized");
+        require(!voted[voter], "already voted");
+        flags[voter] = flag;
+    }
+
+    function fetchParties() public view returns (address[] memory) {
+        return authorizedParties;
+    }
+
+    function isVoted(address _party) public view returns (bool) {
+        return flags[_party];
     }
 }

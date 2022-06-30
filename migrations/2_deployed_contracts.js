@@ -1,5 +1,5 @@
-const AssetTransfer = artifacts.require('AssetTransfer')
+const DigitalBallot = artifacts.require('DigitalBallot')
 
 module.exports = function (deployer) {
-  deployer.deploy(AssetTransfer)
+  deployer.deploy(DigitalBallot)
 }
