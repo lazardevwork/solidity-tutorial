@@ -1,14 +1,18 @@
-# 2. Asset Transfer
+# 3. Digital Ballot
 
 ## Requirements
 
-• Develop a dapp that performs a payment between two parties.  
-• The application should allow to initialize the amount owned by one party, and check for sufficient funds before the transfer.  
-• The amount to pay should be agreed between the two parties.
+• Develop a dapp to cast a vote (Yes / No) if authorized and within a defined time period.
+• The owner can define an open ballot (start and end date and time).
+• The owner can authorize parties to vote.
+• Votes can be submitted only once.
 
 ## Functionality
 
-• UI for setting up the initial amount owned by the paying party.  
-• UI for defining the amount of payment by the payee (receiving party).  
-• Button to perform the payment.  
-• Label to show any validation error.
+• UI for defining the start and end date and time of a ballot.
+• UI for authorizing other members to vote.
+• UI for casting a vote only once.
+• Label to display any validation error
+o Vote out of allowed time period
+o Vote not authorized
+o Vote already submitted

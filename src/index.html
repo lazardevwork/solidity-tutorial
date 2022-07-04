@@ -8,13 +8,22 @@
 </head>
 
 <body>
+  <h2> Ballot Duration</h2>
+  <label for="start_time">Start Date:</label> <input id="start_time" type="datetime-local" value="2022-07-04T04:30" />
+  <label for="end_time"> End Date: </label> <input id="end_time" type="datetime-local" value="2022-07-04T08:30" />
+  <button type="button" id="init_time_btn"> Submit </button><br>
+  <hr>
 
-  Payer Amount: <span id="payer_amount"></span> <br>
-  Payee Amount: <span id="payee_amount"></span> <br>
-
-  Init Amount: <input id="amount_init" type="text" value="50" readonly disabled>
+  <h2> Ballot User Register</h2>
+  Add voter: <input id="new_voter_address" type="text">
+  <button type="button" id="new_voter_add"> Add Voter </button>
   <br>
-  Send Amount: <input id="amount_send" type="text"> <button id="send" type="button">Send</button>
+  <hr>
+
+  <h2> Vote</h2>
+  Voter Address: <input id="voter_address" type="text">
+  <button id="voter_address_yes" type="button">YES</button>
+  <button id="voter_address_no" type="button">NO</button>
   <br>
   Result: <label id="error_message"></label>
 
