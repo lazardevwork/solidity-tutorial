@@ -1,18 +1,20 @@
-# 3. Digital Ballot
+# 4. Digital Signature
 
 ## Requirements
 
-• Develop a dapp to cast a vote (Yes / No) if authorized and within a defined time period.
-• The owner can define an open ballot (start and end date and time).
-• The owner can authorize parties to vote.
-• Votes can be submitted only once.
+• Develop a dapp to digitally sign a document with a SHA-256 hash algorithm, and verify its authenticity by comparing the hash value at time of check with the value stored on the blockchain.
 
 ## Functionality
 
-• UI for defining the start and end date and time of a ballot.
-• UI for authorizing other members to vote.
-• UI for casting a vote only once.
-• Label to display any validation error
-o Vote out of allowed time period
-o Vote not authorized
-o Vote already submitted
+### UI to upload a document and store it in IPFS.
+
+- Use the Infura API for IPFS: www.infura.io
+
+### Calculate the SHA-256 hash value and store it on the blockchain.
+
+### UI to verify a document:
+
+- Upload a document
+- Calculate the hash value
+- Compare the hash value with the value stored on the blockchain
+- If they match, the document is the same, otherwise shows an error
