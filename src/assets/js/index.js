@@ -16,6 +16,9 @@ const voter_address = document.getElementById('voter_address')
 const voter_address_yes = document.getElementById('voter_address_yes')
 const voter_address_no = document.getElementById('voter_address_no')
 
+const result_message = document.getElementById('result_message')
+const currentUserStatus = document.getElementById('currentUserStatus')
+
 
 
 
@@ -35,6 +38,18 @@ const loadBlockchainData = async (web3Info) => {
         contract = new web3Info.eth.Contract(abi, address)
         const parties = await contract.methods.fetchParties().call()
         console.log('[parties]', parties)
+        if (result_message) {
+          result_message.innerHTML = `
+            <h2> Available Voters</h2>
+            <div>
+            ${parties?.map(party => `<div>${party}</div>`).join('')}
+            </div>            
+          `
+        }
+        const isVoted = await contract.methods.isVoted().call()
+        if (currentUserStatus) {
+          currentUserStatus.innerText = isVoted ? 'YES' : 'NO'
+        }
         // const payerAmount = await contract.methods.getPayerAmount().call()
         // payer_amount.innerText = payerAmount
         // payee_amount.innerText = payeeAmount
@@ -46,67 +61,74 @@ const loadBlockchainData = async (web3Info) => {
 
 }
 
+if (init_time_btn) {
+  init_time_btn.addEventListener('click', async () => {
+    try {
 
-init_time_btn.addEventListener('click', async () => {
-  try {
-
-    let start = start_time.value ? new Date(start_time.value) : new Date()
-    let end = end_time.value ? new Date(end_time.value) : new Date()
-    start = start.getTime()
-    end = end.getTime()
+      let start = start_time.value ? new Date(start_time.value) : new Date()
+      let end = end_time.value ? new Date(end_time.value) : new Date()
+      start = start.getTime()
+      end = end.getTime()
 
 
-    contract.methods.openBallot(start, end).send({ from: networkAccount }, function (receipt) {
-      console.log(receipt)
-      loadBlockchainData(web3Info)
-    }).catch((error) => {
-      console.log(error)
-    })
-
-  } catch (error) {
-    console.error(error)
-  }
-})
-
-new_voter_add.addEventListener('click', async () => {
-  try {
-
-    let address = new_voter_address.value
-
-    if (address) {
-      contract.methods.addParty(address).send({ from: networkAccount }, function (receipt) {
+      contract.methods.openBallot(start, end).send({ from: networkAccount }, function (receipt) {
         console.log(receipt)
         loadBlockchainData(web3Info)
       }).catch((error) => {
         console.log(error)
       })
-    }
-  } catch (error) {
-    console.error(error)
-  }
-})
 
-function voteUser(address, flag) {
-  if (address) {
-    contract.methods.vote(address).send({ from: networkAccount }, function (receipt) {
+    } catch (error) {
+      console.error(error)
+    }
+  })
+}
+if (new_voter_add) {
+  new_voter_add.addEventListener('click', async () => {
+    try {
+
+      let address = new_voter_address.value
+
+      if (address) {
+        contract.methods.addParty(address).send({ from: networkAccount }, function (receipt) {
+          console.log(receipt)
+          loadBlockchainData(web3Info)
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  })
+}
+
+function voteUser(flag) {
+  try {
+    contract.methods.vote(flag).send({ from: networkAccount }, function (receipt) {
       console.log(receipt)
       loadBlockchainData(web3Info)
     }).catch((error) => {
       console.log(error)
     })
+  } catch (error) {
+    console.error(error)
   }
+
 }
 
-voter_address_yes.addEventListener('click', async () => {
-  const address = voter_address.value
-  voteUser(address, true)
-})
+if (voter_address_yes) {
+  voter_address_yes.addEventListener('click', async () => {
+    voteUser(true)
+  })
+}
 
-voter_address_no.addEventListener('click', async () => {
-  const address = voter_address.value
-  voteUser(address, false)
-
-})
+if (voter_address_no) {
+  voter_address_no.addEventListener('click', async () => {
+    const address = voter_address.value
+    voteUser(address, false)
+  })
+}
 
 window.onload = async function () {
   let web3 = null

@@ -29,6 +29,7 @@ contract DigitalBallot {
     }
 
     function addParty(address _party) public OnlyOwner {
+        require(!parties[_party], "party already exists");
         parties[_party] = true;
         authorizedParties.push(_party);
     }
@@ -36,7 +37,7 @@ contract DigitalBallot {
     function vote(bool flag) public {
         address voter = msg.sender;
         require(block.timestamp >= startTime && block.timestamp <= endTime, "");
-        require(parties[voter], "not authorized");
+        require(parties[voter] || owner == voter, "not authorized");
         require(!voted[voter], "already voted");
         flags[voter] = flag;
     }
@@ -45,7 +46,9 @@ contract DigitalBallot {
         return authorizedParties;
     }
 
-    function isVoted(address _party) public view returns (bool) {
+    function isVoted() public view returns (bool) {
+        address _party = msg.sender;
+        require(parties[_party] || owner == _party, "not authorized");
         return flags[_party];
     }
 }
