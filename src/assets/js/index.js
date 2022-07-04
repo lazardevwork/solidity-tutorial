@@ -88,7 +88,7 @@ new_voter_add.addEventListener('click', async () => {
 
 function voteUser(address, flag) {
   if (address) {
-    contract.methods.addParty(address).send({ from: networkAccount }, function (receipt) {
+    contract.methods.vote(address).send({ from: networkAccount }, function (receipt) {
       console.log(receipt)
       loadBlockchainData(web3Info)
     }).catch((error) => {
