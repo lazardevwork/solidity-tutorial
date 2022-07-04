@@ -47,6 +47,7 @@ const loadBlockchainData = async (web3Info) => {
           `
         }
         const isVoted = await contract.methods.isVoted().call()
+        console.log(isVoted)
         if (currentUserStatus) {
           currentUserStatus.innerText = isVoted ? 'YES' : 'NO'
         }
