@@ -1,27 +1,14 @@
-import DigitalBallot from '../../abis/DigitalBallot.json'
+import DigitalSignature from '../../abis/DigitalSignature.json'
 
 let networkAccount = null
 let contract = null
 let web3Info = null
 
-const start_time = document.getElementById('start_time')
-const end_time = document.getElementById('end_time')
-const init_time_btn = document.getElementById('init_time_btn')
+const upload_file_register = document.getElementById('upload_file_register')
+const upload_file_register_upload = document.getElementById('upload_file_register_upload')
 
-
-const new_voter_address = document.getElementById('new_voter_address')
-const new_voter_add = document.getElementById('new_voter_add')
-
-const voter_address = document.getElementById('voter_address')
-const voter_address_yes = document.getElementById('voter_address_yes')
-const voter_address_no = document.getElementById('voter_address_no')
-
-const result_message = document.getElementById('result_message')
-const currentUserStatus = document.getElementById('currentUserStatus')
-
-
-
-
+const upload_file_signature = document.getElementById('upload_file_signature')
+const upload_file_signature_upload = document.getElementById('upload_file_signature_upload')
 
 
 const loadBlockchainData = async (web3Info) => {
@@ -31,105 +18,32 @@ const loadBlockchainData = async (web3Info) => {
 
       networkAccount = accounts[0]
       const networkId = await web3Info.eth.net.getId()
-      const networkData = DigitalBallot.networks[networkId]
+      const networkData = DigitalSignature.networks[networkId]
       if (networkData) {
-        const abi = DigitalBallot.abi
+        const abi = DigitalSignature.abi
         const address = networkData.address
         contract = new web3Info.eth.Contract(abi, address)
-        const parties = await contract.methods.fetchParties().call()
-        console.log('[parties]', parties)
-        if (result_message) {
-          result_message.innerHTML = `
-            <h2> Available Voters</h2>
-            <div>
-            ${parties?.map(party => `<div>${party}</div>`).join('')}
-            </div>            
-          `
-        }
-        const isVoted = await contract.methods.isVoted().call()
-        console.log(isVoted)
-        if (currentUserStatus) {
-          currentUserStatus.innerText = isVoted ? 'YES' : 'NO'
-        }
-        // const payerAmount = await contract.methods.getPayerAmount().call()
-        // payer_amount.innerText = payerAmount
-        // payee_amount.innerText = payeeAmount
+
         return
       }
     }
   }
   alert('web3Info is not valid')
-
 }
 
-if (init_time_btn) {
-  init_time_btn.addEventListener('click', async () => {
-    try {
-
-      let start = start_time.value ? new Date(start_time.value) : new Date()
-      let end = end_time.value ? new Date(end_time.value) : new Date()
-      start = start.getTime()
-      end = end.getTime()
-
-
-      contract.methods.openBallot(start, end).send({ from: networkAccount }, function (receipt) {
-        console.log(receipt)
-        loadBlockchainData(web3Info)
-      }).catch((error) => {
-        console.log(error)
-      })
-
-    } catch (error) {
-      console.error(error)
-    }
+if (upload_file_register) {
+  upload_file_register.addEventListener('change', (e) => {
+    const file = e.target.file[0]
+    console.log('[file]', file)
   })
 }
-if (new_voter_add) {
-  new_voter_add.addEventListener('click', async () => {
-    try {
-
-      let address = new_voter_address.value
-
-      if (address) {
-        contract.methods.addParty(address).send({ from: networkAccount }, function (receipt) {
-          console.log(receipt)
-          loadBlockchainData(web3Info)
-        }).catch((error) => {
-          console.log(error)
-        })
-      }
-    } catch (error) {
-      console.error(error)
-    }
+if (upload_file_signature) {
+  upload_file_signature.addEventListener('change', (e) => {
+    const file = e.target.file[0]
+    console.log('[file]', file)
   })
 }
 
-function voteUser(flag) {
-  try {
-    contract.methods.vote(flag).send({ from: networkAccount }, function (receipt) {
-      console.log(receipt)
-      loadBlockchainData(web3Info)
-    }).catch((error) => {
-      console.log(error)
-    })
-  } catch (error) {
-    console.error(error)
-  }
-
-}
-
-if (voter_address_yes) {
-  voter_address_yes.addEventListener('click', async () => {
-    voteUser(true)
-  })
-}
-
-if (voter_address_no) {
-  voter_address_no.addEventListener('click', async () => {
-    const address = voter_address.value
-    voteUser(address, false)
-  })
-}
 
 window.onload = async function () {
   let web3 = null

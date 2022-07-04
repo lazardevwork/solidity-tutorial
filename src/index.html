@@ -8,22 +8,15 @@
 </head>
 
 <body>
-  <h2> Ballot Duration</h2>
-  <label for="start_time">Start Date:</label> <input id="start_time" type="datetime-local" value="2022-07-04T04:30" />
-  <label for="end_time"> End Date: </label> <input id="end_time" type="datetime-local" value="2022-07-04T08:30" />
-  <button type="button" id="init_time_btn"> Submit </button><br>
+  <h1> Digital Signature</h1>
+
+  <h2> Register </h2>
+  <input type="file" id="upload_file_register">
+  <button type="button" id="upload_file_register_upload">Upload</button>
   <hr>
-
-  <h2> Ballot User Register</h2>
-  Add voter: <input id="new_voter_address" type="text">
-  <button type="button" id="new_voter_add"> Add Voter </button>
-  <br>
-  <hr>
-
-  Result: <label id="result_message"></label>
-
-
-  <script src="./build/js/index.min.js"></script>
+  <h2> Signature</h2>
+  <input type="file" id="upload_file_signature">
+  <button type="button" id="upload_file_signature_upload">Upload</button>
 </body>
 
 </html>
