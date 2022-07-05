@@ -1,14 +1,20 @@
-# 2. Asset Transfer
+# 4. Digital Signature
 
 ## Requirements
 
-• Develop a dapp that performs a payment between two parties.  
-• The application should allow to initialize the amount owned by one party, and check for sufficient funds before the transfer.  
-• The amount to pay should be agreed between the two parties.
+• Develop a dapp to digitally sign a document with a SHA-256 hash algorithm, and verify its authenticity by comparing the hash value at time of check with the value stored on the blockchain.
 
 ## Functionality
 
-• UI for setting up the initial amount owned by the paying party.  
-• UI for defining the amount of payment by the payee (receiving party).  
-• Button to perform the payment.  
-• Label to show any validation error.
+### UI to upload a document and store it in IPFS.
+
+- Use the Infura API for IPFS: www.infura.io
+
+### Calculate the SHA-256 hash value and store it on the blockchain.
+
+### UI to verify a document:
+
+- Upload a document
+- Calculate the hash value
+- Compare the hash value with the value stored on the blockchain
+- If they match, the document is the same, otherwise shows an error

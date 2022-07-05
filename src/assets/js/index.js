@@ -1,12 +1,14 @@
-import DigitalBallot from '../../abis/DigitalBallot.json'
+import DigitalSignature from '../../abis/DigitalSignature.json'
 
 let networkAccount = null
 let contract = null
 let web3Info = null
-const send_btn = document.getElementById('send')
-const amount_init = document.getElementById('amount_init')
-const payer_amount = document.getElementById('payer_amount')
-const payee_amount = document.getElementById('payee_amount')
+
+const upload_file_register = document.getElementById('upload_file_register')
+const upload_file_register_upload = document.getElementById('upload_file_register_upload')
+
+const upload_file_signature = document.getElementById('upload_file_signature')
+const upload_file_signature_upload = document.getElementById('upload_file_signature_upload')
 
 
 const loadBlockchainData = async (web3Info) => {
@@ -16,44 +18,31 @@ const loadBlockchainData = async (web3Info) => {
 
       networkAccount = accounts[0]
       const networkId = await web3Info.eth.net.getId()
-      const networkData = DigitalBallot.networks[networkId]
+      const networkData = DigitalSignature.networks[networkId]
       if (networkData) {
-        const abi = DigitalBallot.abi
+        const abi = DigitalSignature.abi
         const address = networkData.address
         contract = new web3Info.eth.Contract(abi, address)
-        const payeeAmount = await contract.methods.getPayeeAmount().call()
-        const payerAmount = await contract.methods.getPayerAmount().call()
-        payer_amount.innerText = payerAmount
-        payee_amount.innerText = payeeAmount
+
         return
       }
     }
   }
   alert('web3Info is not valid')
-
 }
 
-
-send_btn.addEventListener('click', async () => {
-  try {
-
-    let amount = document.getElementById('amount_send').value
-    console.log(amount)
-    if (amount) {
-      amount = parseInt(amount)
-      contract.methods.send(amount).send({ from: networkAccount }, function (receipt) {
-        console.log(receipt)
-        loadBlockchainData(web3Info)
-      }).catch((error) => {
-        console.log(error)
-      })
-    } else {
-      alert('name is null')
-    }
-  } catch (error) {
-    console.error(error)
-  }
-})
+if (upload_file_register) {
+  upload_file_register.addEventListener('change', (e) => {
+    const file = e.target.file[0]
+    console.log('[file]', file)
+  })
+}
+if (upload_file_signature) {
+  upload_file_signature.addEventListener('change', (e) => {
+    const file = e.target.file[0]
+    console.log('[file]', file)
+  })
+}
 
 
 window.onload = async function () {
@@ -71,10 +60,6 @@ window.onload = async function () {
   }
 
   web3Info = web3
-  await loadBlockchainData(web3)
-  const amount = amount_init.value
-  contract.methods.init(amount).send({ from: networkAccount }, function (receipt) {
-    loadBlockchainData(web3)
-  })
+  await loadBlockchainData(web3Info)
 }
 
