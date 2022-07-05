@@ -1,5 +1,5 @@
-const HelloWorld = artifacts.require('HelloWorld')
+const AssetTransfer = artifacts.require('AssetTransfer')
 
-module.exports = function(deployer) {
-  deployer.deploy(HelloWorld)
+module.exports = function (deployer) {
+  deployer.deploy(AssetTransfer)
 }
