@@ -16,8 +16,8 @@ contract HelloWorld {
         pure
         returns (string memory)
     {
-        // return string(bytes.concat(bytes(a), " ", bytes(b)));
-        return string(abi.encodePacked(a, " ", b));
+        return string(bytes.concat(bytes(a), " ", bytes(b)));
+        // return string(abi.encodePacked(a, " ", b));
     }
 
     function getHello() public view returns (string memory) {
